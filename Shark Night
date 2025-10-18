@@ -1,0 +1,95 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+  <meta charset="UTF-8">
+  <title>Shark Night Kämpferliste</title>
+  <style>
+    body { font-family: Arial, sans-serif; margin: 20px; background: #f0f0f0; }
+    h1 { text-align: center; }
+    table { width: 100%; border-collapse: collapse; margin-top: 20px; background: white; }
+    th, td { border: 1px solid #ccc; padding: 8px; text-align: center; }
+    th { background: #333; color: white; }
+    input, select { width: 100%; }
+    .controls { margin-top: 20px; display: flex; gap: 10px; flex-wrap: wrap; }
+    button { padding: 10px 15px; font-size: 16px; cursor: pointer; }
+    .image-preview { max-width: 100px; max-height: 100px; }
+  </style>
+</head>
+<body>
+
+  <h1>🥊 Shark Night Kämpferliste</h1>
+
+  <div class="controls">
+    <button onclick="addRow()">➕ Kämpfer hinzufügen</button>
+    <button onclick="printPage()">🖨️ Drucken</button>
+    <button onclick="shareWhatsApp()">📤 Teilen via WhatsApp</button>
+  </div>
+
+  <table id="fighterTable">
+    <thead>
+      <tr>
+        <th>Name</th>
+        <th>Alter</th>
+        <th>Gewicht</th>
+        <th>Kämpfe</th>
+        <th>Schule</th>
+        <th>Bild</th>
+        <th>Löschen</th>
+      </tr>
+    </thead>
+    <tbody></tbody>
+  </table>
+
+  <script>
+    function addRow() {
+      const table = document.getElementById("fighterTable").getElementsByTagName("tbody")[0];
+      const row = table.insertRow();
+      for (let i = 0; i < 5; i++) {
+        const cell = row.insertCell();
+        const input = document.createElement("input");
+        input.type = "text";
+        cell.appendChild(input);
+      }
+
+      // Bild-Upload
+      const imgCell = row.insertCell();
+      const imgInput = document.createElement("input");
+      imgInput.type = "file";
+      imgInput.accept = "image/*";
+      imgInput.onchange = function () {
+        const reader = new FileReader();
+        reader.onload = function (e) {
+          const img = document.createElement("img");
+          img.src = e.target.result;
+          img.className = "image-preview";
+          imgCell.innerHTML = "";
+          imgCell.appendChild(img);
+        };
+        reader.readAsDataURL(imgInput.files[0]);
+      };
+      imgCell.appendChild(imgInput);
+
+      // Löschen-Button
+      const deleteCell = row.insertCell();
+      const delBtn = document.createElement("button");
+      delBtn.textContent = "🗑️";
+      delBtn.onclick = function () {
+        row.remove();
+      };
+      deleteCell.appendChild(delBtn);
+    }
+
+    function printPage() {
+      window.print();
+    }
+
+    function shareWhatsApp() {
+      const text = "Schau dir unsere Shark Night Kämpferliste an!";
+      const url = window.location.href;
+      const whatsappUrl = `https://wa.me/?text=${encodeURIComponent(text + " " + url)}`;
+      window.open(whatsappUrl, "_blank");
+    }
+  </script>
+
+</body>
+</html>
